@@ -180,3 +180,4 @@ This project is created as a portfolio demonstration and is not licensed for com
 **Built with ❤️ for the Supabase Product Marketing team**
 
 Showcasing modern web development practices, AI integration, and production-ready architecture for launch management workflows.
+# Launch Week Command Center Demo
