@@ -8,6 +8,7 @@ import { Rocket } from 'lucide-react'
 const navigation = [
   { name: 'Dashboard', href: '/' },
   { name: 'Launches', href: '/launches' },
+  { name: 'Launch Week', href: '/launch-week', highlight: true },
   { name: 'AI Assistant', href: '/assistant' },
 ]
 
@@ -35,13 +36,17 @@ export default function Header() {
                 key={item.name}
                 href={item.href}
                 className={cn(
-                  'text-sm font-medium transition-colors hover:text-accent',
+                  'text-sm font-medium transition-colors hover:text-accent relative',
                   pathname === item.href
                     ? 'text-accent border-b-2 border-accent pb-1'
-                    : 'text-muted'
+                    : 'text-muted',
+                  item.highlight && pathname !== item.href && 'text-accent/80'
                 )}
               >
                 {item.name}
+                {item.highlight && (
+                  <span className="absolute -top-1 -right-1 h-2 w-2 bg-accent rounded-full animate-pulse" />
+                )}
               </Link>
             ))}
           </nav>
