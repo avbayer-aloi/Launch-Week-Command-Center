@@ -134,21 +134,6 @@ The platform integrates with Claude AI to generate various types of content:
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Supabase anonymous key
 - `ANTHROPIC_API_KEY` - Claude AI API key
 
-## 🚀 Deployment
-
-### Vercel (Recommended)
-
-1. **Connect your repository** to Vercel
-2. **Set environment variables** in Vercel dashboard
-3. **Deploy** - Vercel will automatically build and deploy
-
-The project includes a `vercel.json` configuration file for optimal deployment.
-
-### Manual Deployment
-
-1. Build the project: `npm run build`
-2. Deploy the `.next` folder to your hosting provider
-3. Ensure environment variables are configured
 
 ## 🎯 Portfolio Highlights
 
@@ -177,7 +162,7 @@ This project is created as a portfolio demonstration and is not licensed for com
 
 ---
 
-**Built with ❤️ for the Supabase Product Marketing team**
+**Built for the Supabase Product Marketing team**
 
 Showcasing modern web development practices, AI integration, and production-ready architecture for launch management workflows.
 # Launch Week Command Center Demo
