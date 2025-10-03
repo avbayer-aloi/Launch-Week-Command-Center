@@ -1,10 +1,11 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 import { Card, CardContent } from '@/components/ui/Card'
 import Button from '@/components/ui/Button'
 import Modal from '@/components/ui/Modal'
-import { Calendar, ExternalLink, Database, Zap, Radio, Shield, Layout, ChevronRight, ArrowDown } from 'lucide-react'
+import { Calendar, ExternalLink, Database, Zap, Radio, Shield, Layout, ChevronRight, ArrowDown, Code2 } from 'lucide-react'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
@@ -62,6 +63,15 @@ const launchFeatures: LaunchFeature[] = [
     icon: <Layout className="h-6 w-6" />,
     day: 5,
     status: 'coming-soon',
+    hasFullAnnouncement: false,
+  },
+  {
+    id: 'interactive-sandbox',
+    title: 'Interactive Launch Sandbox',
+    description: 'Prototype hands-on playground for trying Supabase features live',
+    icon: <Code2 className="h-6 w-6" />,
+    day: 6,
+    status: 'shipped',
     hasFullAnnouncement: false,
   },
 ]
@@ -184,6 +194,7 @@ export default function LaunchWeekPage() {
   const [showModal, setShowModal] = useState(false)
   const [cardsInView, setCardsInView] = useState<boolean[]>(new Array(launchFeatures.length).fill(false))
   const cardRefs = useRef<(HTMLDivElement | null)[]>([])
+  const router = useRouter()
 
   useEffect(() => {
     const observers = cardRefs.current.map((ref, index) => {
@@ -212,6 +223,11 @@ export default function LaunchWeekPage() {
   }, [])
 
   const openAnnouncement = (feature: LaunchFeature) => {
+    if (feature.id === 'interactive-sandbox') {
+      router.push('/sandbox')
+      return
+    }
+    
     setSelectedFeature(feature)
     if (feature.hasFullAnnouncement) {
       setShowModal(true)
@@ -417,13 +433,19 @@ export default function LaunchWeekPage() {
                     className="group-hover:border-accent group-hover:text-accent group-hover:bg-accent/5 transition-all duration-300 font-medium w-full sm:w-auto"
                     disabled={feature.status === 'coming-soon' && !feature.hasFullAnnouncement}
                   >
-                    {feature.status === 'coming-soon' ? 'Coming Soon' : 'Read Announcement'}
+                    {feature.id === 'interactive-sandbox' ? 'Try Sandbox' : 
+                     feature.status === 'coming-soon' ? 'Coming Soon' : 'Read Announcement'}
                     <ExternalLink className="ml-2 h-3 w-3 sm:h-4 sm:w-4 group-hover:translate-x-1 transition-transform" />
                   </Button>
                   
                   {index === 0 && (
                     <div className="inline-flex items-center justify-center sm:justify-start px-3 py-1 rounded-full bg-accent/10 text-accent text-xs font-bold border border-accent/20">
                       ✨ Featured
+                    </div>
+                  )}
+                  {feature.id === 'interactive-sandbox' && (
+                    <div className="inline-flex items-center justify-center sm:justify-start px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 text-xs font-bold border border-purple-500/30">
+                      🧪 Prototype
                     </div>
                   )}
                 </div>
