@@ -7,7 +7,7 @@ import Button from '@/components/ui/Button'
 import Badge from '@/components/ui/Badge'
 import { supabase, Launch, ActivityLog } from '@/lib/supabase'
 import { formatDate, formatRelativeTime } from '@/lib/utils'
-import { TrendingUp, Clock, CheckCircle, Users, Plus, Sparkles, BarChart3 } from 'lucide-react'
+import { TrendingUp, Clock, CheckCircle, Users, Plus, Sparkles, BarChart3, Code2, Terminal, Rocket, Zap, ChevronRight, Play } from 'lucide-react'
 
 export default function Dashboard() {
   const [launches, setLaunches] = useState<Launch[]>([])

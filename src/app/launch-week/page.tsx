@@ -552,18 +552,10 @@ export default function LaunchWeekPage() {
               })}
               
               <div className="flex gap-4 pt-8 border-t border-border">
-                <Button 
-                  variant="primary" 
-                  className="flex-1"
-                  onClick={() => window.open('https://supabase.com/docs/guides/ai/vector', '_blank')}
-                >
+                <Button variant="primary" className="flex-1">
                   Try Vector Search Now
                 </Button>
-                <Button 
-                  variant="outline" 
-                  className="flex-1"
-                  onClick={() => window.open('https://supabase.com/docs/guides/ai/vector', '_blank')}
-                >
+                <Button variant="outline" className="flex-1">
                   View Documentation
                 </Button>
               </div>
