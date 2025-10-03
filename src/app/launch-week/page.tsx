@@ -186,7 +186,7 @@ Vector search in Supabase is production-ready with:
 
 Vector search is available today on all Supabase projects. Check out our documentation for implementation guides and best practices.
 
-[Read the full documentation →](https://supabase.com/docs/guides/ai/vector-search)
+[Read the full documentation →](https://supabase.com/docs/guides/ai/vector)
 `
 
 export default function LaunchWeekPage() {
