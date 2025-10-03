@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Card, CardContent } from '@/components/ui/Card'
 import Button from '@/components/ui/Button'
 import Modal from '@/components/ui/Modal'
-import { Calendar, ExternalLink, Database, Zap, Radio, Shield, Layout, ChevronRight } from 'lucide-react'
+import { Calendar, ExternalLink, Database, Zap, Radio, Shield, Layout, ChevronRight, ArrowDown } from 'lucide-react'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
@@ -182,6 +182,34 @@ Vector search is available today on all Supabase projects. Check out our documen
 export default function LaunchWeekPage() {
   const [selectedFeature, setSelectedFeature] = useState<LaunchFeature | null>(null)
   const [showModal, setShowModal] = useState(false)
+  const [cardsInView, setCardsInView] = useState<boolean[]>(new Array(launchFeatures.length).fill(false))
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([])
+
+  useEffect(() => {
+    const observers = cardRefs.current.map((ref, index) => {
+      if (!ref) return null
+      
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setCardsInView(prev => {
+              const newState = [...prev]
+              newState[index] = true
+              return newState
+            })
+          }
+        },
+        { threshold: 0.2, rootMargin: '50px' }
+      )
+      
+      observer.observe(ref)
+      return observer
+    })
+
+    return () => {
+      observers.forEach(observer => observer?.disconnect())
+    }
+  }, [])
 
   const openAnnouncement = (feature: LaunchFeature) => {
     setSelectedFeature(feature)
@@ -197,33 +225,130 @@ export default function LaunchWeekPage() {
 
   return (
     <div className="min-h-screen">
+      <style jsx>{`
+        @keyframes gradient-shift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes fade-slide-up {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes pulse-glow {
+          0%, 100% {
+            box-shadow: 0 0 8px rgba(62, 207, 142, 0.3);
+            transform: scale(1);
+          }
+          50% {
+            box-shadow: 0 0 16px rgba(62, 207, 142, 0.5);
+            transform: scale(1.02);
+          }
+        }
+        
+        @keyframes badge-pulse {
+          0%, 100% {
+            background-color: #3ECF8E;
+            transform: scale(1);
+          }
+          50% {
+            background-color: #2DB574;
+            transform: scale(1.05);
+          }
+        }
+        
+        .animated-gradient {
+          background: linear-gradient(
+            -45deg,
+            #ffffff,
+            #f0f0f0,
+            #3ECF8E,
+            #ffffff,
+            #e0e0e0,
+            #3ECF8E
+          );
+          background-size: 400% 400%;
+          animation: gradient-shift 6s ease-in-out infinite;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+        
+        .card-entrance {
+          animation: fade-slide-up 0.8s ease-out forwards;
+        }
+        
+        .card-entrance-delay-1 { animation-delay: 0.1s; }
+        .card-entrance-delay-2 { animation-delay: 0.2s; }
+        .card-entrance-delay-3 { animation-delay: 0.3s; }
+        .card-entrance-delay-4 { animation-delay: 0.4s; }
+        
+        .hover-glow:hover {
+          animation: pulse-glow 2s infinite;
+        }
+        
+        .badge-animate:hover {
+          animation: badge-pulse 1s infinite;
+        }
+        
+        .floating-bg {
+          background: radial-gradient(circle at 20% 80%, rgba(62, 207, 142, 0.15) 0%, transparent 50%),
+                      radial-gradient(circle at 80% 20%, rgba(62, 207, 142, 0.1) 0%, transparent 50%);
+          animation: float 20s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          33% { transform: translateY(-10px) rotate(1deg); }
+          66% { transform: translateY(5px) rotate(-1deg); }
+        }
+      `}</style>
+
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-background via-background to-accent/5 border-b border-border">
+      <div className="relative overflow-hidden bg-gradient-to-br from-background via-background to-accent/5 border-b border-border min-h-screen flex items-center">
         <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24">
+        <div className="floating-bg absolute inset-0" />
+        
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-32 w-full">
           <div className="text-center">
-            <div className="inline-flex items-center rounded-full border border-border bg-card px-4 py-2 text-sm mb-8">
-              <Calendar className="mr-2 h-4 w-4 text-accent" />
-              December 9-13, 2024
+            <div className="inline-flex items-center rounded-full border border-border bg-card px-6 py-3 text-base mb-12 shadow-lg">
+              <Calendar className="mr-3 h-5 w-5 text-accent" />
+              October 6–10, 2025
             </div>
-            <h1 className="text-6xl md:text-8xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent mb-6">
-              Launch Week 12
+            
+            <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[12rem] font-bold animated-gradient mb-8 leading-none px-4">
+              Launch Week 15
             </h1>
-            <p className="text-xl md:text-2xl text-muted mb-8 max-w-3xl mx-auto">
+            
+            <p className="text-xl sm:text-2xl md:text-3xl text-muted mb-10 max-w-4xl mx-auto font-light px-4">
               5 days of new features, demos, and updates
             </p>
-            <p className="text-lg text-muted/80 mb-12 max-w-2xl mx-auto">
+            
+            <p className="text-base sm:text-lg md:text-xl text-muted/80 mb-16 max-w-3xl mx-auto leading-relaxed px-4">
               Join us as we unveil the latest innovations in the Supabase ecosystem. 
               From AI-powered features to performance improvements, this week has it all.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="text-lg px-8 py-4">
+            
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center mb-16 px-4">
+              <Button size="lg" className="text-base sm:text-lg px-6 sm:px-10 py-4 sm:py-5 bg-accent hover:bg-accent/90 text-background font-semibold">
                 View All Announcements
-                <ChevronRight className="ml-2 h-5 w-5" />
+                <ChevronRight className="ml-2 sm:ml-3 h-5 w-5 sm:h-6 sm:w-6" />
               </Button>
-              <Button variant="outline" size="lg" className="text-lg px-8 py-4">
+              <Button variant="outline" size="lg" className="text-base sm:text-lg px-6 sm:px-10 py-4 sm:py-5 border-accent text-accent hover:bg-accent/10">
                 Subscribe for Updates
               </Button>
+            </div>
+            
+            <div className="animate-bounce">
+              <ArrowDown className="h-6 w-6 text-accent mx-auto" />
             </div>
           </div>
         </div>
@@ -238,26 +363,38 @@ export default function LaunchWeekPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8">
           {launchFeatures.map((feature, index) => (
             <Card 
               key={feature.id}
-              className="group hover:shadow-xl hover:shadow-accent/5 transition-all duration-300 cursor-pointer border-border hover:border-accent/30 relative overflow-hidden"
+              ref={el => { cardRefs.current[index] = el; return undefined; }}
+              className={`group hover-glow transition-all duration-500 cursor-pointer border-border hover:border-accent/50 relative overflow-hidden ${
+                cardsInView[index] 
+                  ? `card-entrance card-entrance-delay-${index}` 
+                  : 'opacity-0 translate-y-8'
+              }`}
               onClick={() => openAnnouncement(feature)}
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <CardContent className="p-8 relative">
-                <div className="flex items-start justify-between mb-6">
-                  <div className="flex items-center space-x-3">
-                    <div className="h-12 w-12 rounded-lg bg-accent/10 flex items-center justify-center text-accent group-hover:bg-accent/20 transition-colors">
+              <div className="absolute inset-0 bg-gradient-to-br from-accent/8 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              
+              <CardContent className="p-6 sm:p-8 relative">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-6 sm:mb-8">
+                  <div className="flex items-center space-x-3 sm:space-x-4 mb-4 sm:mb-0">
+                    <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-xl bg-accent/10 flex items-center justify-center text-accent group-hover:bg-accent/20 transition-all duration-300 group-hover:scale-110 shrink-0">
                       {feature.icon}
                     </div>
-                    <div className="text-sm">
-                      <div className="font-medium text-muted">Day {feature.day}</div>
-                      <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                    <div className="min-w-0">
+                      <div className={`inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold text-background mb-2 badge-animate ${
                         feature.status === 'shipped' 
-                          ? 'bg-accent/10 text-accent' 
-                          : 'bg-muted/10 text-muted'
+                          ? 'bg-accent shadow-lg' 
+                          : 'bg-muted'
+                      }`}>
+                        Day {feature.day}
+                      </div>
+                      <div className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs font-semibold ${
+                        feature.status === 'shipped' 
+                          ? 'bg-accent/20 text-accent border border-accent/30' 
+                          : 'bg-muted/20 text-muted border border-muted/30'
                       }`}>
                         {feature.status === 'shipped' ? '✓ Shipped' : 'Coming Soon'}
                       </div>
@@ -265,27 +402,27 @@ export default function LaunchWeekPage() {
                   </div>
                 </div>
 
-                <h3 className="text-xl font-semibold mb-3 group-hover:text-accent transition-colors">
+                <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 group-hover:text-accent transition-colors duration-300 leading-tight">
                   {feature.title}
                 </h3>
                 
-                <p className="text-muted mb-6 line-clamp-2">
+                <p className="text-muted mb-6 sm:mb-8 text-sm sm:text-base leading-relaxed">
                   {feature.description}
                 </p>
 
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                   <Button 
                     variant="outline" 
                     size="sm"
-                    className="group-hover:border-accent group-hover:text-accent"
+                    className="group-hover:border-accent group-hover:text-accent group-hover:bg-accent/5 transition-all duration-300 font-medium w-full sm:w-auto"
                     disabled={feature.status === 'coming-soon' && !feature.hasFullAnnouncement}
                   >
                     {feature.status === 'coming-soon' ? 'Coming Soon' : 'Read Announcement'}
-                    <ExternalLink className="ml-2 h-3 w-3" />
+                    <ExternalLink className="ml-2 h-3 w-3 sm:h-4 sm:w-4 group-hover:translate-x-1 transition-transform" />
                   </Button>
                   
                   {index === 0 && (
-                    <div className="text-xs text-accent font-medium">
+                    <div className="inline-flex items-center justify-center sm:justify-start px-3 py-1 rounded-full bg-accent/10 text-accent text-xs font-bold border border-accent/20">
                       ✨ Featured
                     </div>
                   )}
@@ -293,6 +430,26 @@ export default function LaunchWeekPage() {
               </CardContent>
             </Card>
           ))}
+        </div>
+
+        {/* Secondary CTA */}
+        <div className="text-center mt-16 sm:mt-20">
+          <div className="bg-gradient-to-r from-accent/5 via-accent/10 to-accent/5 rounded-2xl p-8 sm:p-12 border border-accent/20">
+            <h3 className="text-2xl sm:text-3xl font-bold mb-4 bg-gradient-to-r from-foreground to-accent bg-clip-text text-transparent">
+              Don&apos;t Miss a Single Update
+            </h3>
+            <p className="text-base sm:text-lg text-muted mb-6 sm:mb-8 max-w-2xl mx-auto px-4">
+              Get notified about each launch as it happens. Join thousands of developers following along.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center px-4">
+              <Button size="lg" className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 bg-accent hover:bg-accent/90 text-background font-semibold">
+                Subscribe to Updates
+              </Button>
+              <Button variant="outline" size="lg" className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 border-accent text-accent hover:bg-accent/10">
+                Follow on Twitter
+              </Button>
+            </div>
+          </div>
         </div>
 
         {/* Stats Section */}
