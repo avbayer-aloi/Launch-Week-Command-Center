@@ -10,6 +10,7 @@ const navigation = [
   { name: 'Launches', href: '/launches' },
   { name: 'Launch Week', href: '/launch-week', highlight: true },
   { name: 'AI Assistant', href: '/assistant' },
+  { name: 'Content Samples', href: '/samples' },
 ]
 
 export default function Header() {
