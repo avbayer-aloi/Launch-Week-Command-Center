@@ -11,6 +11,7 @@ const navigation = [
   { name: 'Launch Week', href: '/launch-week', highlight: true },
   { name: 'AI Assistant', href: '/assistant' },
   { name: 'Content Samples', href: '/samples' },
+  { name: 'The Grid', href: '/the-grid' },
 ]
 
 export default function Header() {

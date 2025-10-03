@@ -353,7 +353,7 @@ export default function Dashboard() {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-8">
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 <Link href="/launches?action=new" className="group">
                   <div className="h-32 p-6 border border-border/50 rounded-xl bg-gradient-to-br from-accent/5 to-accent/10 hover:from-accent/10 hover:to-accent/20 transition-all duration-300 hover:border-accent/30 hover:shadow-lg hover:shadow-accent/10">
                     <div className="flex flex-col items-center text-center space-y-3">
@@ -397,6 +397,22 @@ export default function Dashboard() {
                           Sandbox
                         </h3>
                         <p className="text-xs text-muted font-mono">npm start --dev</p>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+
+                <Link href="/the-grid" className="group">
+                  <div className="h-32 p-6 border border-border/50 rounded-xl bg-gradient-to-br from-orange-500/5 to-orange-500/10 hover:from-orange-500/10 hover:to-orange-500/20 transition-all duration-300 hover:border-orange-500/30 hover:shadow-lg hover:shadow-orange-500/10">
+                    <div className="flex flex-col items-center text-center space-y-3">
+                      <div className="h-12 w-12 bg-orange-500/10 rounded-xl flex items-center justify-center group-hover:bg-orange-500/20 group-hover:scale-110 transition-all">
+                        <Users className="h-6 w-6 text-orange-500" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-foreground group-hover:text-orange-500 transition-colors">
+                          The Grid
+                        </h3>
+                        <p className="text-xs text-muted font-mono">join --community</p>
                       </div>
                     </div>
                   </div>
