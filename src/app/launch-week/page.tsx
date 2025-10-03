@@ -384,12 +384,12 @@ export default function LaunchWeekPage() {
             <Card 
               key={feature.id}
               ref={el => { cardRefs.current[index] = el; return undefined; }}
-              className={`group hover-glow transition-all duration-500 cursor-pointer border-border hover:border-accent/50 relative overflow-hidden ${
+              className={`group hover-glow transition-all duration-500 ${feature.id === 'vector-search' ? 'cursor-default' : 'cursor-pointer'} border-border hover:border-accent/50 relative overflow-hidden ${
                 cardsInView[index] 
                   ? `card-entrance card-entrance-delay-${index}` 
                   : 'opacity-0 translate-y-8'
               }`}
-              onClick={() => openAnnouncement(feature)}
+              onClick={feature.id === 'vector-search' ? undefined : () => openAnnouncement(feature)}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-accent/8 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               
